@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+<div class = "page-header">
+  <h1>Snake</h1>
+  <h2 style="color:aquamarine; font-size: 14px;; margin-top: auto;">by Lol_gamer23</h2>
+</div>
 <canvas id="canvas" width="800" height="800"></canvas>
 <script type="text/javascript">
 
@@ -13,7 +17,7 @@
     let foodX = 15;
     let foodY = 15;
 
-    let tc = 20;
+    let tc = 40;
     let scl = 20;
 
     let tail = [];
@@ -24,6 +28,7 @@
       ctx = canv.getContext("2d");
       document.addEventListener("keydown", keyPressed);
       setInterval(game,1000/15);
+      tc = Math.floor(canv.width / scl);
     }
 
     function game(){
@@ -66,33 +71,42 @@
       }
 
       function draw(){
-          ctx.fillStyle = "#666666";
-          ctx.fillRect(0, 0, canv.width, canv.height);
+        
+        ctx.fillStyle = "#666666";
+        ctx.fillRect(0, 0, canv.width, canv.height);
+
+          for(let i = 0; i < canv.width / scl; i++){
+            for(let j = 0;j < canv.height / scl; j++){
+              if((i + j) % 2 == 0) {
+                ctx.fillStyle = "#555555";
+                ctx.fillRect(i * scl, j * scl, scl, scl)
+              }
+            }
+          }
 
           ctx.fillStyle = "#0000FF";
-          ctx.fillRect(playerX * tc , playerY * tc, scl, scl);
+          ctx.fillRect(playerX * scl , playerY * scl, scl, scl);
 
           ctx.fillStyle = "#0000A0";
           for(let i = 0; i < tail.length; i++){
-            ctx.fillRect(tail[i].x * tc, tail[i].y * tc, scl, scl);
+            ctx.fillRect(tail[i].x * scl, tail[i].y * scl, scl, scl);
           }
-
           ctx.fillStyle = "#00FF00";
-          ctx.fillRect(foodX * tc, foodY * tc ,scl ,scl);
+          ctx.fillRect(foodX * scl, foodY * scl ,scl ,scl);
       }
 
     function keyPressed(evt){
-      if(evt.keyCode == 37 || evt.keyCode == 65){
+      if((evt.keyCode == 37 || evt.keyCode == 65) && playerXVel != 1){
         playerXVel = -1;
         playerYVel = 0;
-      } else if(evt.keyCode == 39 || evt.keyCode == 68){
+      } else if((evt.keyCode == 39 || evt.keyCode == 68) && playerXVel != -1){
         playerXVel = 1;
         playerYVel = 0;
       }
-      if(evt.keyCode == 38 || evt.keyCode == 87){
+      if((evt.keyCode == 38 || evt.keyCode == 87) && playerYVel != 1 ){
         playerXVel = 0;
         playerYVel = -1;
-      } else if(evt.keyCode == 40 || evt.keyCode == 83){
+      } else if((evt.keyCode == 40 || evt.keyCode == 83) && playerYVel != -1){
         playerXVel = 0;
         playerYVel = 1;
       }
@@ -103,18 +117,18 @@
 <style>
   body {background-color: #151515;}
   canvas{
-    padding-left: 0;
-    padding-right: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: auto;
-    margin-bottom: auto;
+    padding: 5;
+    margin: auto;
     display: block;
     width: 800px;
     border: #151515;
   }
 
+  .page-header{
+    color:#729292;
+    text-align: center;
+    font-size: 24px;
+    font-family: sans-serif;
+  }
 
 </style>
