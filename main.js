@@ -20,14 +20,14 @@ function generateImage(){
     {
         console.log("round");
         canv = createCanvas(w,w);
-        background(128);
+        background(255);
         generateRound(canv);
     }
     else
     {
         console.log("rect");
         canv = createCanvas(w,h);
-        background(128);
+        background(255);
         generateRectangle(canv);
     }
 
