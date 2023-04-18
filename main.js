@@ -19,21 +19,13 @@ function generateImage(){
 
     percentages = nColors == 1 ? p1 : nColors == 2 ? p2 : p3;
 
-    //let p = 1 / (nColors + 1) * f;
-
     let canv;
 
     let isRound = document.getElementById("is-round").value=="round";
 
-    //colors.push(color(255,255));
-    //colors.push(color(255,0,0,255));
-    //colors.push(color(0,255,0,255));
-    //colors.push(color(0,0,255,255));
-
     for(let i = 0; i < nColors; i++)
     {
         colors.push(color(map(i,0,nColors,0,191),255));
-        //percentages.push(f - p * i);
     }
 
     strokeWeight(1);
@@ -42,22 +34,17 @@ function generateImage(){
     {
         canv = createCanvas(w,w);
         background(255);
-        generateRound(canv);//, colors, percentages);
+        generateRound(canv);
     }
     else
     {
         canv = createCanvas(w,h);
         background(255);
-        generateRectangle(canv);//, colors, percentages);
+        generateRectangle(canv);
     }
 
-    //loadPixels();
-
-    //console.log(pixels);
-
-    //updatePixels();
-
-    processImage(colors,percentages);
+    if(nColors > 1)
+        processImage(colors,percentages);
 
     //saveCanvas(date.toLocaleDateString(),'jpg');
 }
@@ -68,7 +55,7 @@ function downloadPattern()
     saveCanvas(date.toLocaleDateString(),'jpg');
 }
 
-function generateRectangle(canv)//, colors, percentages)
+function generateRectangle(canv)
 {
     let xOff = 0;
     let yOff = 10000;
@@ -80,33 +67,18 @@ function generateRectangle(canv)//, colors, percentages)
         for(let i = 0; i < canv.width; i++)
         {
             let p = noise(xOff, yOff);
-            /*let col = colors[0];
-            for(let k = 1; k < percentages.length;k++)
-            {
-                if(p < percentages[k])
-                {
-                    col = colors[k]
-                }
-            }*/
             let col = p < 0.67 ? 255 : 0;
             let index = i + j * canv.width;
-            stroke(col);
-            fill(col);
-            //point(i,j);
             set(i,j,col);
-            //rect(i,j,1,1);
-            //pixels[index] = color(col);
             xOff += 0.01;
-            //console.log("Yeet");
         }
-        //console.log("Xeet");
         yOff += 0.01;
     }
 
     updatePixels();
 }
 
-function generateRound(canv)//, colors, percentages)
+function generateRound(canv)
 {
     let xOff = 0;
     let yOff = 10000;
@@ -121,32 +93,14 @@ function generateRound(canv)//, colors, percentages)
         {
         
             let p = noise(xOff, yOff);
-            /*let col = colors[0];
-            for(let k = 1; k < percentages.length;k++)
-            {
-                if(p < percentages[k])
-                {
-                    col = colors[k]
-                }
-            }*/
             let col = p < 0.67 ? 255 : 0;
-
-            //x * x + y * y < radius * radius + radius
 
             if(i * i + j * j < rad * rad + rad)
             {
-
-                stroke(col);
-                fill(col);
-                //point(rad + i,rad + j);
                 set(i,j,col);
-                //rect(rad + i, rad + j,1,1);
-                //pixels[index] = color(col);
             }
             xOff += 0.01;
-            //console.log("Yeet");
         }
-        //console.log("Xeet");
         yOff += 0.01;
     }
 
@@ -160,26 +114,23 @@ function processImage(colors, percentages)
     let previous = -1;
 
     let newCol = colors[floor(random(percentages.length))];
-    //console.log(newCol);
     for(let j = 0; j < height; j++)
     {
         for(let i = 0; i < width; i++)
         {
             let index = i + j * width * 4;
-            let currentCol = red(get(i,j));//calcColor(pixels[index], pixels[index+1], pixels[index+2], pixels[index+3]);
-            //newCol = get(i,j);
+            let currentCol = red(get(i,j));
+            if(currentCol == 255)
+            {
+                continue;
+            }
             if(previous != currentCol)
             {
                 newCol = colors[floor(random(percentages.length))];
             }
-            if(currentCol == 255)//calcColor(255,255,255,255)) 
-            {
-                continue;
-            }
             set(i,j,newCol);
             previous = currentCol;
         }
-        //console.log("Yeet");
     }
 
     updatePixels();
