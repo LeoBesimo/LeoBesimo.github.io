@@ -5,6 +5,7 @@ function generateImage(){
     let w = document.getElementById("width").value;
     let h = document.getElementById("height").value;
     noiseSeed(seed);
+    randomSeed(seed);
 
     let colors = [];
     let percentages = [];
@@ -34,17 +35,16 @@ function generateImage(){
     {
         canv = createCanvas(w,w);
         background(255);
-        generateRound(canv);
+        generateRound(canv, colors);
     }
     else
     {
         canv = createCanvas(w,h);
         background(255);
-        generateRectangle(canv);
+        generateRectangle(canv, colors);
     }
 
-    if(nColors > 1)
-        processImage(colors,percentages);
+    //if(nColors > 1) processImage(colors,percentages);
 
     //saveCanvas(date.toLocaleDateString(),'jpg');
 }
@@ -55,21 +55,28 @@ function downloadPattern()
     saveCanvas(date.toLocaleDateString(),'jpg');
 }
 
-function generateRectangle(canv)
+function generateRectangle(canv, colors)
 {
     let xOff = 0;
     let yOff = 10000;
 
     loadPixels();
+    let fillCol = colors[floor(random(colors.length))];
     for(let j = 0; j < canv.height; j++)
     {
-
         for(let i = 0; i < canv.width; i++)
         {
             let p = noise(xOff, yOff);
-            let col = p < 0.67 ? 255 : 0;
-            let index = i + j * canv.width;
-            set(i,j,col);
+            let fill = p < 0.61 ? false : true;
+            //let col = p < 0.67 ? 255 : 0;
+            if(fill)
+            {
+                set(i,j, fillCol);   
+            }else
+            {
+                fillCol = colors[floor(random(colors.length))];
+                set(i,j,color(255,255));
+            }
             xOff += 0.01;
         }
         yOff += 0.01;
@@ -78,7 +85,7 @@ function generateRectangle(canv)
     updatePixels();
 }
 
-function generateRound(canv)
+function generateRound(canv,colors)
 {
     let xOff = 0;
     let yOff = 10000;
@@ -86,18 +93,27 @@ function generateRound(canv)
     loadPixels();
 
     let rad = canv.width / 2;
+    let fillCol = colors[floor(random(colors.length))];
 
     for(let j = -rad; j < rad; j++)
     {
         for(let i = -rad; i < rad; i++)
         {
-        
             let p = noise(xOff, yOff);
             let col = p < 0.67 ? 255 : 0;
 
             if(i * i + j * j < rad * rad + rad)
             {
-                set(i,j,col);
+                let fill = p < 0.61 ? false : true;
+            //let col = p < 0.67 ? 255 : 0;
+            if(fill)
+            {
+                set(rad + i,rad + j, fillCol);   
+            }else
+            {
+                fillCol = colors[floor(random(colors.length))];
+                set(rad + i,rad + j,color(255,255));
+            }
             }
             xOff += 0.01;
         }
